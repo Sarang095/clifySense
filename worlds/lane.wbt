@@ -1,0 +1,185 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/road/protos/StraightRoadSegment.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/vehicles/protos/bmw/BmwX5.proto"
+
+WorldInfo {
+  info [
+    "Autonomous Driving Simulation - Lane Following"
+    "This world contains a straight road for lane following practice"
+  ]
+  title "Lane Following Environment"
+  basicTimeStep 32
+  contactProperties [
+    ContactProperties {
+      material1 "wheel"
+      material2 "road"
+      coulombFriction [
+        0.8
+      ]
+    }
+  ]
+}
+
+Viewpoint {
+  orientation -0.5773502691896258 0.5773502691896258 0.5773502691896258 2.0944
+  position 4.0 4.0 4.0
+  follow "vehicle"
+}
+
+TexturedBackground {
+}
+
+TexturedBackgroundLight {
+}
+
+# Road segments
+StraightRoadSegment {
+  translation 0 0 0
+  width 7
+  length 200
+  numberOfLanes 2
+  lines [
+    RoadLine {
+      type "continuous"
+      color 0.85 0.75 0.3
+      width 0.2
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+}
+
+StraightRoadSegment {
+  translation 0 0 -200
+  width 7
+  length 200
+  numberOfLanes 2
+  lines [
+    RoadLine {
+      type "continuous"
+      color 0.85 0.75 0.3
+      width 0.2
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+}
+
+StraightRoadSegment {
+  translation 0 0 200
+  width 7
+  length 200
+  numberOfLanes 2
+  lines [
+    RoadLine {
+      type "continuous"
+      color 0.85 0.75 0.3
+      width 0.2
+    }
+  ]
+  rightBorder FALSE
+  leftBorder FALSE
+}
+
+# Main vehicle
+BmwX5 {
+  translation 0 0.4 0
+  rotation 0 1 0 0
+  name "vehicle"
+  controller "autonomous_vehicle"
+  sensorsSlotFront [
+    Camera {
+      translation 0 0 0
+      name "camera"
+      width 224
+      height 224
+      near 0.1
+      far 100
+    }
+    DistanceSensor {
+      translation 0.2 0 0.1
+      name "ds_front"
+      lookupTable [
+        0 0 0
+        10 10 0
+      ]
+    }
+    DistanceSensor {
+      translation 0.15 0 0.15
+      rotation 0 1 0 0.3
+      name "ds_front_left"
+      lookupTable [
+        0 0 0
+        10 10 0
+      ]
+    }
+    DistanceSensor {
+      translation 0.15 0 -0.15
+      rotation 0 1 0 -0.3
+      name "ds_front_right"
+      lookupTable [
+        0 0 0
+        10 10 0
+      ]
+    }
+  ]
+  sensorsSlotRear [
+    DistanceSensor {
+      translation -0.2 0 0.1
+      rotation 0 1 0 3.14159
+      name "ds_rear"
+      lookupTable [
+        0 0 0
+        10 10 0
+      ]
+    }
+  ]
+  sensorsSlotLeft [
+    DistanceSensor {
+      translation 0 0 0.2
+      rotation 0 1 0 1.5708
+      name "ds_left"
+      lookupTable [
+        0 0 0
+        10 10 0
+      ]
+    }
+  ]
+  sensorsSlotRight [
+    DistanceSensor {
+      translation 0 0 -0.2
+      rotation 0 1 0 -1.5708
+      name "ds_right"
+      lookupTable [
+        0 0 0
+        10 10 0
+      ]
+    }
+  ]
+  sensorsSlotCenter [
+    GPS {
+      name "gps"
+    }
+    Compass {
+      name "compass"
+    }
+  ]
+}
+
+# Static obstacle vehicles
+BmwX5 {
+  translation 0 0.4 -50
+  rotation 0 1 0 0
+  name "obstacle1"
+  controller "static_obstacle"
+}
+
+BmwX5 {
+  translation 3.5 0.4 -100
+  rotation 0 1 0 0
+  name "obstacle2"
+  controller "static_obstacle"
+}

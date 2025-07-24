@@ -1,0 +1,71 @@
+environments:
+  lane:
+    name: "Lane Following"
+    world_file: "lane.wbt"
+    max_episode_steps: 1000
+    success_threshold: 0.95
+    rewards:
+      lane_keeping: 1.0
+      collision: -100.0
+      goal_reached: 50.0
+      speed_penalty: -0.1
+    
+  roundabout:
+    name: "Roundabout Navigation"
+    world_file: "roundabout.wbt"
+    max_episode_steps: 1500
+    success_threshold: 0.85
+    rewards:
+      safe_entry: 10.0
+      safe_exit: 20.0
+      collision: -100.0
+      yielding: 5.0
+      wrong_direction: -50.0
+    
+  intersection:
+    name: "Intersection Navigation"
+    world_file: "intersection.wbt"
+    max_episode_steps: 800
+    success_threshold: 0.90
+    rewards:
+      signal_compliance: 15.0
+      collision: -100.0
+      right_of_way: 10.0
+      goal_reached: 30.0
+      illegal_turn: -25.0
+    
+  parking:
+    name: "Parking Maneuver"
+    world_file: "parking.wbt"
+    max_episode_steps: 2000
+    success_threshold: 0.80
+    rewards:
+      proximity_to_spot: 2.0
+      successful_park: 100.0
+      collision: -100.0
+      precision_bonus: 25.0
+      time_penalty: -0.05
+
+vehicle:
+  max_speed: 30.0  # km/h
+  wheelbase: 2.6   # meters
+  max_steering_angle: 0.6  # radians
+  camera_resolution: [224, 224]
+  sensor_update_rate: 20  # Hz
+
+training:
+  imitation_learning:
+    batch_size: 32
+    learning_rate: 0.001
+    epochs: 100
+    validation_split: 0.2
+    
+  reinforcement_learning:
+    algorithm: "PPO"
+    learning_rate: 0.0003
+    total_timesteps: 1000000
+    policy: "CnnPolicy"
+    n_steps: 2048
+    batch_size: 64
+    gamma: 0.99
+    gae_lambda: 0.95
