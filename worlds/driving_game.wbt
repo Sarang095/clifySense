@@ -1,0 +1,504 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/vehicles/protos/generic/Car.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/road/protos/Road.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/road/protos/RoadLine.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/traffic/protos/TrafficLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/trees/protos/Tree.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/buildings/protos/SimpleBuilding.proto"
+
+WorldInfo {
+  info [
+    "Webots Driving Game - Race Circuit"
+    "Navigate through checkpoints, avoid obstacles, and race against time!"
+  ]
+  title "Driving Game Circuit"
+  basicTimeStep 16
+  contactProperties [
+    ContactProperties {
+      material1 "CitroenCZeroWheels"
+      material2 "floor"
+      coulombFriction [
+        8
+      ]
+      softCFM 1e-05
+      bumpSound ""
+      rollSound ""
+      slideSound ""
+    }
+  ]
+}
+
+Viewpoint {
+  orientation -0.5773502691896258 0.5773502691896258 0.5773502691896258 2.0944
+  position 0 15 30
+  follow "player_car"
+  followType "Mounted Shot"
+}
+
+TexturedBackground {
+  texture "noon_cloudy_empty"
+}
+
+TexturedBackgroundLight {
+  texture "noon_cloudy_empty"
+}
+
+RectangleArena {
+  floorSize 200 200
+  floorTileSize 5 5
+  wallHeight 2
+  wallAppearance PBRAppearance {
+    baseColorMap ImageTexture {
+      url [
+        "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/default/worlds/textures/red_brick_wall.jpg"
+      ]
+    }
+    roughness 1
+    metalness 0
+  }
+}
+
+# Main Player Car
+Car {
+  name "player_car"
+  translation 0 0.4 -80
+  rotation 0 1 0 0
+  controller "driving_game_controller"
+  sensorsSlotFront [
+    Camera {
+      name "front_camera"
+      translation 0 0.1 0.5
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 0.8 0.8 0.8
+            roughness 0.5
+            metalness 0.5
+          }
+          geometry Sphere {
+            radius 0.02
+          }
+        }
+      ]
+      fieldOfView 1.047
+      width 640
+      height 480
+    }
+    DistanceSensor {
+      name "front_sensor"
+      translation 0 0 0.5
+      lookupTable [
+        0 0 0
+        5 5 0
+      ]
+    }
+  ]
+  sensorsSlotRear [
+    GPS {
+      name "gps"
+    }
+    Compass {
+      name "compass"
+    }
+  ]
+  sensorsSlotLeft [
+    DistanceSensor {
+      name "left_sensor"
+      translation 0 0 0
+      rotation 0 1 0 1.5708
+      lookupTable [
+        0 0 0
+        3 3 0
+      ]
+    }
+  ]
+  sensorsSlotRight [
+    DistanceSensor {
+      name "right_sensor"
+      translation 0 0 0
+      rotation 0 1 0 -1.5708
+      lookupTable [
+        0 0 0
+        3 3 0
+      ]
+    }
+  ]
+}
+
+# Race Track Roads
+Road {
+  translation 0 0.01 -70
+  rotation 0 1 0 0
+  width 8
+  numberOfLanes 2
+  speedLimit 60
+  length 140
+  appearance PBRAppearance {
+    baseColor 0.3 0.3 0.3
+    roughness 0.7
+  }
+}
+
+Road {
+  translation 70 0.01 0
+  rotation 0 1 0 1.5708
+  width 8
+  numberOfLanes 2
+  speedLimit 60
+  length 140
+  appearance PBRAppearance {
+    baseColor 0.3 0.3 0.3
+    roughness 0.7
+  }
+}
+
+Road {
+  translation 0 0.01 70
+  rotation 0 1 0 3.14159
+  width 8
+  numberOfLanes 2
+  speedLimit 60
+  length 140
+  appearance PBRAppearance {
+    baseColor 0.3 0.3 0.3
+    roughness 0.7
+  }
+}
+
+Road {
+  translation -70 0.01 0
+  rotation 0 1 0 -1.5708
+  width 8
+  numberOfLanes 2
+  speedLimit 60
+  length 140
+  appearance PBRAppearance {
+    baseColor 0.3 0.3 0.3
+    roughness 0.7
+  }
+}
+
+# Checkpoint 1 (Start/Finish Line)
+Solid {
+  name "checkpoint_1"
+  translation 0 1 -75
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0 1 0
+        emissiveColor 0 0.5 0
+      }
+      geometry Box {
+        size 10 2 0.5
+      }
+    }
+    DEF CHECKPOINT_TEXT Transform {
+      translation 0 1.5 0
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 1 1 1
+          }
+          geometry Text {
+            string ["START/FINISH"]
+            fontFamily "Arial"
+            size 0.8
+          }
+        }
+      ]
+    }
+  ]
+  boundingObject Box {
+    size 10 2 0.5
+  }
+  physics Physics {
+    density -1
+    mass 0
+  }
+}
+
+# Checkpoint 2
+Solid {
+  name "checkpoint_2"
+  translation 75 1 0
+  rotation 0 1 0 1.5708
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 1 1 0
+        emissiveColor 0.5 0.5 0
+      }
+      geometry Box {
+        size 10 2 0.5
+      }
+    }
+    Transform {
+      translation 0 1.5 0
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 1 1 1
+          }
+          geometry Text {
+            string ["CHECKPOINT 2"]
+            fontFamily "Arial"
+            size 0.8
+          }
+        }
+      ]
+    }
+  ]
+  boundingObject Box {
+    size 10 2 0.5
+  }
+  physics Physics {
+    density -1
+    mass 0
+  }
+}
+
+# Checkpoint 3
+Solid {
+  name "checkpoint_3"
+  translation 0 1 75
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 1 0.5 0
+        emissiveColor 0.5 0.25 0
+      }
+      geometry Box {
+        size 10 2 0.5
+      }
+    }
+    Transform {
+      translation 0 1.5 0
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 1 1 1
+          }
+          geometry Text {
+            string ["CHECKPOINT 3"]
+            fontFamily "Arial"
+            size 0.8
+          }
+        }
+      ]
+    }
+  ]
+  boundingObject Box {
+    size 10 2 0.5
+  }
+  physics Physics {
+    density -1
+    mass 0
+  }
+}
+
+# Checkpoint 4
+Solid {
+  name "checkpoint_4"
+  translation -75 1 0
+  rotation 0 1 0 -1.5708
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 1 0 1
+        emissiveColor 0.5 0 0.5
+      }
+      geometry Box {
+        size 10 2 0.5
+      }
+    }
+    Transform {
+      translation 0 1.5 0
+      children [
+        Shape {
+          appearance PBRAppearance {
+            baseColor 1 1 1
+          }
+          geometry Text {
+            string ["CHECKPOINT 4"]
+            fontFamily "Arial"
+            size 0.8
+          }
+        }
+      ]
+    }
+  ]
+  boundingObject Box {
+    size 10 2 0.5
+  }
+  physics Physics {
+    density -1
+    mass 0
+  }
+}
+
+# Obstacles
+Solid {
+  name "obstacle_1"
+  translation 30 0.5 -40
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 1 0 0
+        emissiveColor 0.5 0 0
+      }
+      geometry Cylinder {
+        height 1
+        radius 2
+      }
+    }
+  ]
+  boundingObject Cylinder {
+    height 1
+    radius 2
+  }
+  physics Physics {
+    density 1000
+  }
+}
+
+Solid {
+  name "obstacle_2"
+  translation -30 0.5 40
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 1 0 0
+        emissiveColor 0.5 0 0
+      }
+      geometry Cylinder {
+        height 1
+        radius 2
+      }
+    }
+  ]
+  boundingObject Cylinder {
+    height 1
+    radius 2
+  }
+  physics Physics {
+    density 1000
+  }
+}
+
+# Collectible Items (Power-ups)
+Solid {
+  name "powerup_1"
+  translation 20 0.5 -20
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0 0 1
+        emissiveColor 0 0 0.5
+        transparency 0.3
+      }
+      geometry Sphere {
+        radius 1
+      }
+    }
+  ]
+  boundingObject Sphere {
+    radius 1
+  }
+  physics Physics {
+    density -1
+    mass 0
+  }
+}
+
+Solid {
+  name "powerup_2"
+  translation -20 0.5 20
+  children [
+    Shape {
+      appearance PBRAppearance {
+        baseColor 0 0 1
+        emissiveColor 0 0 0.5
+        transparency 0.3
+      }
+      geometry Sphere {
+        radius 1
+      }
+    }
+  ]
+  boundingObject Sphere {
+    radius 1
+  }
+  physics Physics {
+    density -1
+    mass 0
+  }
+}
+
+# AI Competitor Car
+Car {
+  name "ai_car"
+  translation 5 0.4 -80
+  rotation 0 1 0 0
+  controller "ai_competitor"
+  color 1 0 0
+}
+
+# Environment Decorations
+Tree {
+  translation 50 0 50
+  name "tree_1"
+}
+
+Tree {
+  translation -50 0 -50
+  name "tree_2"
+}
+
+Tree {
+  translation 50 0 -50
+  name "tree_3"
+}
+
+Tree {
+  translation -50 0 50
+  name "tree_4"
+}
+
+SimpleBuilding {
+  translation 90 0 90
+  name "building_1"
+  floorNumber 3
+  corners [
+    10 10
+    10 -10
+    -10 -10
+    -10 10
+  ]
+}
+
+SimpleBuilding {
+  translation -90 0 -90
+  name "building_2"
+  floorNumber 2
+  corners [
+    8 8
+    8 -8
+    -8 -8
+    -8 8
+  ]
+}
+
+# Traffic Lights
+TrafficLight {
+  translation 40 0 -35
+  name "traffic_light_1"
+}
+
+TrafficLight {
+  translation -40 0 35
+  name "traffic_light_2"
+}
