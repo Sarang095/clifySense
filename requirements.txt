@@ -1,0 +1,14 @@
+numpy>=1.21.0
+opencv-python>=4.5.0
+tensorflow>=2.8.0
+torch>=1.12.0
+torchvision>=0.13.0
+stable-baselines3>=1.6.0
+gymnasium>=0.26.0
+matplotlib>=3.5.0
+scipy>=1.8.0
+pillow>=8.3.0
+pyyaml>=6.0
+tensorboard>=2.8.0
+wandb>=0.12.0
+tqdm>=4.64.0
